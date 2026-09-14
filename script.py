@@ -69,6 +69,18 @@ def detect_installed_browsers():
     return detected
 
 
+def _maximize_driver(driver):
+    """Maximaliseer het venster automatisch naar het schermformaat van de gebruiker."""
+    try:
+        driver.maximize_window()
+    except Exception:
+        # Fallback voor omgevingen zonder window manager
+        try:
+            driver.set_window_size(1280, 800)
+        except Exception:
+            pass
+
+
 def _launch_browser(browser_name):
     """Start de geselecteerde browser met passende opties."""
     b = browser_name.lower().strip()
@@ -76,8 +88,6 @@ def _launch_browser(browser_name):
     if b == "firefox":
         from selenium.webdriver.firefox.options import Options as FirefoxOptions
         options = FirefoxOptions()
-        options.add_argument("--width=1920")
-        options.add_argument("--height=1080")
         try:
             return webdriver.Firefox(options=options)
         except Exception:
@@ -88,7 +98,6 @@ def _launch_browser(browser_name):
     elif b in ("chrome", "google-chrome"):
         from selenium.webdriver.chrome.options import Options as ChromeOptions
         options = ChromeOptions()
-        options.add_argument("--window-size=1920,1080")
         try:
             return webdriver.Chrome(options=options)
         except Exception:
@@ -99,7 +108,6 @@ def _launch_browser(browser_name):
     elif b == "edge":
         from selenium.webdriver.edge.options import Options as EdgeOptions
         options = EdgeOptions()
-        options.add_argument("--window-size=1920,1080")
         try:
             return webdriver.Edge(options=options)
         except Exception:
@@ -110,7 +118,6 @@ def _launch_browser(browser_name):
     elif b == "chromium":
         from selenium.webdriver.chrome.options import Options as ChromeOptions
         options = ChromeOptions()
-        options.add_argument("--window-size=1920,1080")
         chrom_path = shutil.which("chromium") or shutil.which("chromium-browser")
         if chrom_path:
             options.binary_location = chrom_path
@@ -125,7 +132,6 @@ def _launch_browser(browser_name):
     elif b == "brave":
         from selenium.webdriver.chrome.options import Options as ChromeOptions
         options = ChromeOptions()
-        options.add_argument("--window-size=1920,1080")
         brave_path = shutil.which("brave-browser") or shutil.which("brave") or shutil.which("brave.exe")
         if brave_path:
             options.binary_location = brave_path
@@ -156,10 +162,7 @@ def get_driver(browser_preference="auto"):
     if pref != "auto":
         print(f"Browser gekozen in configuratie: {pref}")
         driver = _launch_browser(pref)
-        try:
-            driver.set_window_size(1920, 1080)
-        except Exception:
-            pass
+        _maximize_driver(driver)
         return driver
 
     # Automatische detectie
@@ -173,10 +176,7 @@ def get_driver(browser_preference="auto"):
         try:
             print(f"Poging om '{browser}' op te starten...")
             driver = _launch_browser(browser)
-            try:
-                driver.set_window_size(1920, 1080)
-            except Exception:
-                pass
+            _maximize_driver(driver)
             print(f"Browser succesvol gestart ({browser})!")
             return driver
         except Exception as e:
