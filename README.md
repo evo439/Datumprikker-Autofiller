@@ -4,7 +4,7 @@ This script automatically fills in a [Datumprikker](https://datumprikker.nl/) po
 
 ## Prerequisites
 
-- Google Chrome installed on your machine.
+- A supported browser installed on your machine (e.g. Mozilla Firefox, Google Chrome, Microsoft Edge, Chromium, Brave, or Safari).
 - Python 3.x installed.
 
 ## Setup
@@ -14,6 +14,7 @@ This script automatically fills in a [Datumprikker](https://datumprikker.nl/) po
    - Open `config.py`.
    - Update `DATUMPRIKKER_URL` with your unique Datumprikker link.
    - Update `NAAM` and `EMAIL` with your personal information.
+   - (Optional) Set `BROWSER` to `"auto"` (default, automatically detects your installed browser) or choose a specific browser: `"firefox"`, `"chrome"`, `"edge"`, `"chromium"`, `"brave"`, or `"safari"`.
    - Modify `EXCLUDED_CALENDARS` if you want the script to check specific calendars only (e.g., ignore holidays).
 3. **Google Calendar API Credentials**:
    - Go to the [Google Cloud Console](https://console.cloud.google.com/).
@@ -30,7 +31,7 @@ This script automatically fills in a [Datumprikker](https://datumprikker.nl/) po
    ```
 3. The script will automatically check and install the required dependencies (using `update_dependencies.py`).
 4. **First Run Authentication**: The first time you run the script, a browser window will open asking you to log in to your Google Account and grant read access to your calendars. This creates a `token.json` file so you don't have to log in every time. (If the token expires or is invalid, the script will automatically prompt you to log in again).
-5. The script will then launch an automated Chrome browser, navigate to Datumprikker, compare the dates against your Google Calendar, and fill out your availability (Yes/No).
+5. The script will then launch your browser (automatically detected or as configured), navigate to Datumprikker, compare the dates against your Google Calendar, and fill out your availability (Yes/No).
 6. It will pause on the final screen so you can review the selections. Press **Enter** in the terminal to close the browser and finish.
 
 ## How it works

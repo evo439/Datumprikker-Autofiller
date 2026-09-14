@@ -14,8 +14,8 @@ def update_dependencies():
     try:
         subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "--break-system-packages"] + packages)
         print("Dependencies updated successfully.")
-    except subprocess.CalledProcessError as e:
-        print(f"Failed to update dependencies: {e}")
+    except Exception as e:
+        print(f"Waarschuwing: Kon afhankelijkheden niet automatisch bijwerken via pip: {e}")
 
 if __name__ == "__main__":
     update_dependencies()

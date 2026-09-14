@@ -153,6 +153,9 @@ cython_debug/
 .DS_Store
 Thumbs.db
 
+# Geany files
+*.geany
+
 # Credentials
 credentials.json
 token.json
