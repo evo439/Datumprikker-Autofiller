@@ -1,43 +1,56 @@
-# Datumprikker Autofiller
+# Poll Autofiller (Datumprikker & Timeful)
 
-This script automatically fills in a [Datumprikker](https://datumprikker.nl/) poll based on your Google Calendar availability. It uses Selenium to navigate the web page and the Google Calendar API to check for overlapping events.
+Dit script vult automatisch polls in op zowel [Datumprikker](https://datumprikker.nl/) als [Timeful](https://timeful.app/) op basis van je beschikbaarheid in Google Calendar. Het maakt gebruik van Selenium voor browserinteractie en de Google Calendar API om overlappende afspraken te detecteren.
 
-## Prerequisites
+## Vereisten
 
-- A supported browser installed on your machine (e.g. Mozilla Firefox, Google Chrome, Microsoft Edge, Chromium, Brave, or Safari).
-- Python 3.x installed.
+- Een ondersteunde browser geïnstalleerd op je systeem (bijv. Google Chrome, Mozilla Firefox, Microsoft Edge, Chromium of Brave).
+- Python 3.x geïnstalleerd.
 
-## Setup
+## Installatie & Configuratie
 
-1. **Clone this repository** (or download the files).
-2. **Configure your details** in `config.py`:
+1. **Repository clonen of downloaden**:
+   Zorg dat alle bestanden in dezelfde map staan.
+2. **Instellingen configureren** in `config.py`:
    - Open `config.py`.
-   - Update `DATUMPRIKKER_URL` with your unique Datumprikker link.
-   - Update `NAAM` and `EMAIL` with your personal information.
-   - (Optional) Set `BROWSER` to `"auto"` (default, automatically detects your installed browser) or choose a specific browser: `"firefox"`, `"chrome"`, `"edge"`, `"chromium"`, `"brave"`, or `"safari"`.
-   - Modify `EXCLUDED_CALENDARS` if you want the script to check specific calendars only (e.g., ignore holidays).
+   - Stel `DATUMPRIKKER_URL` in voor Datumprikker polls.
+   - Stel `TIMEFUL_URL` in voor Timeful polls.
+   - Vul je naam (`NAAM`) en e-mailadres (`EMAIL`) in.
+   - (Optioneel) Pas `BROWSER` aan: `"auto"` (standaard, detecteert automatisch een geïnstalleerde browser) of kies specifiek `"chrome"`, `"firefox"`, `"edge"`, etc.
+   - Pas `EXCLUDED_CALENDARS` aan als je bepaalde agenda's wilt negeren (zoals feestdagen).
 3. **Google Calendar API Credentials**:
-   - Go to the [Google Cloud Console](https://console.cloud.google.com/).
-   - Create a new project and enable the **Google Calendar API**.
-   - Create OAuth 2.0 Client ID credentials (choose Desktop App).
-   - Download the JSON file, rename it to `credentials.json`, and place it in the same folder as `script.py`.
+   - Ga naar de [Google Cloud Console](https://console.cloud.google.com/).
+   - Maak een project aan en schakel de **Google Calendar API** in.
+   - Maak OAuth 2.0 Client ID inloggegevens aan (Desktop App).
+   - Download het JSON-bestand, noem het `credentials.json`, en plaats dit in de hoofdmap van het project.
 
-## Running the Script
+## Het script gebruiken
 
-1. Open your terminal or command prompt in the directory containing the files.
-2. Run the script:
+1. Open je terminal in de projectmap.
+2. Start het hoofdscript:
    ```bash
    python script.py
    ```
-3. The script will automatically check and install the required dependencies (using `update_dependencies.py`).
-4. **First Run Authentication**: The first time you run the script, a browser window will open asking you to log in to your Google Account and grant read access to your calendars. This creates a `token.json` file so you don't have to log in every time. (If the token expires or is invalid, the script will automatically prompt you to log in again).
-5. The script will then launch your browser (automatically detected or as configured), navigate to Datumprikker, compare the dates against your Google Calendar, and fill out your availability (Yes/No).
-6. It will pause on the final screen so you can review the selections. Press **Enter** in the terminal to close the browser and finish.
+3. Kies in het terminalmenu welke website je wilt invullen:
+   - **1) Datumprikker (datumprikker.nl)**
+   - **2) Timeful (timeful.app)**
+   - **3) Afsluiten**
 
-## How it works
+Je kunt de afzonderlijke scripts desgewenst ook direct uitvoeren:
+- Alleen Datumprikker: `python datumprikker-script.py` (of `python datumprikker_script.py`)
+- Alleen Timeful: `python timeful-script.py` (of `python timeful_script.py`)
 
-- **`config.py`**: Contains all your personal settings like your Datumprikker link, name, email, and Google Calendar timezone/scopes.
-- **`update_dependencies.py`**: A helper script that runs at the very beginning to ensure you have the required Python packages (`selenium`, `pytz`, `google-api-python-client`, etc.) installed and up to date.
-- **`parser.py`**: A helper module that converts the Dutch date and time text from Datumprikker (e.g., "maandag 12 mei 14:00 - 15:00") into Python datetime objects.
-- **`calendar_integration.py`**: Handles all communication with the Google Calendar API, authenticating your account, and checking for scheduling conflicts with the Datumprikker dates.
-- **`script.py`**: The main script. It uses Selenium to open Datumprikker, fetches events using `calendar_integration.py`, parses dates using `parser.py`, and automatically clicks the corresponding "Yes" or "No" buttons before filling in your details.
+4. **Eerste keer inloggen**: De eerste keer opent een browserscherm om in te loggen bij Google en leestoegang te verlenen tot je agenda. Dit genereert een `token.json` bestand zodat je niet telkens opnieuw hoeft in te loggen.
+5. Het script start de browser, leest de voorgestelde datums/tijdsloten uit, checkt je Google Calendar op conflicten en vult je beschikbaarheid in.
+6. De browser blijft openstaan zodat je de ingevulde gegevens kunt controleren. Druk op **Enter** in de terminal om af te ronden en de browser te sluiten.
+
+## Structuur van de bestanden
+
+- **`script.py`**: Het centrale startpunt met het interactieve terminal keuzemenu.
+- **`datumprikker-script.py` / `datumprikker_script.py`**: Bevat de specifieke logica voor het invullen van Datumprikker.
+- **`timeful-script.py` / `timeful_script.py`**: Bevat de specifieke logica voor het invullen van Timeful (via Timeful Plugin API en DOM).
+- **`browser_utils.py`**: Gedeelde browserdetectie en WebDriver configuratie voor Chrome, Firefox, Edge, Brave, Chromium en Safari.
+- **`calendar_integration.py`**: Beheert authenticatie met Google Calendar en detecteert tijdconflicten (`check_conflict`).
+- **`parser.py`**: Converteert Nederlandse datumaanduidingen naar datetime-objecten.
+- **`config.py`**: Centrale configuratie voor URL's, persoonlijke gegevens en kalender-instellingen.
+- **`update_dependencies.py`**: Controleert en installeert automatisch eventuele ontbrekende Python packages.

@@ -2,6 +2,7 @@ import pytz
 
 # --- SCRIPT CONFIGURATIE ---
 DATUMPRIKKER_URL = "https://datumprikker.nl/YOUR_LINK_HERE"
+TIMEFUL_URL = "https://timeful.app/e/YOUR_LINK_HERE"
 NAAM = "YOUR_NAME_HERE"
 EMAIL = "YOUR_EMAIL_HERE"
 
